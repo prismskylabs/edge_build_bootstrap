@@ -14,7 +14,7 @@ bootstrap_install_python()
     wget  https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py --progress=dot:giga
     sudo python3 /tmp/get-pip.py pip==$PIP_VER wheel==0.34.2 setuptools\>=34.0.0
     sudo python3 -m pip install pip==$PIP_VER --upgrade
-    sudo python3 -m pip install venv
+    sudo python3 -m pip install virtualenv
 
     sudo mkdir -p $VENVS 
 
@@ -22,7 +22,7 @@ bootstrap_install_python()
 
 bootstrap_install_conan()
 {
-    sudo python3 -m venv $CONAN_ENV_DIR
+    sudo python3 -m virtualenv $CONAN_ENV_DIR
     sudo $CONAN_ENV_DIR/bin/pip3 install conan==$CONAN_VER
 
     sudo mkdir -p /usr/local/bin
