@@ -33,7 +33,7 @@ boostrap_configure_conan()
 {
     PSL_CONAN_USER=${PSL_CONAN_USER:-$USER}
     sudo -H -u $PSL_CONAN_USER conan
-    CONAN_CONF=~$PSL_CONAN_USER/.conan/conan.conf
+    CONAN_CONF=$(echo ~$PSL_CONAN_USER/.conan/conan.conf)
     # Enable revisions
    if ! grep "revisions_enabled = True           # environment CONAN_REVISIONS_ENABLED"  $CONAN_CONF; then
        CONF_TMP=$(mktemp  ~$CONAN_CONF.prv.XXX)
