@@ -39,7 +39,7 @@ bootstrap_configure_conan()
        CONF_TMP=$(mktemp  $CONAN_CONF.prv.XXX)
        cp $CONAN_CONF $CONF_TMP
        cat $CONF_TMP | \
-           sed -e '/^\[general\]$/arevisions_enabled = True           # environment CONAN_REVISIONS_ENABLED/' \
+           sed -e '/^\[general\]$/arevisions_enabled = True           # environment CONAN_REVISIONS_ENABLED' \
              >$CONAN_CONF
    fi
 }
