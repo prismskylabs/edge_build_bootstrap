@@ -14,6 +14,7 @@ bootstrap_install_python()
     wget  https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py --progress=dot:giga
     sudo python3 /tmp/get-pip.py pip==$PIP_VER wheel==0.34.2 setuptools\>=34.0.0
     sudo python3 -m pip install pip==$PIP_VER --upgrade
+    sudo python3 -m pip install venv
 
     sudo mkdir -p $VENVS 
 
