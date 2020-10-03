@@ -36,10 +36,10 @@ boostrap_configure_conan()
     CONAN_CONF=~$PSL_CONAN_USER/.conan/conan.conf
     # Enable revisions
    if ! grep "revisions_enabled = True           # environment CONAN_REVISIONS_ENABLED"  $CONAN_CONF; then
-       CONF_TMP=$(mktemp  ~$CONAN_CONF.XXX.prv)
+       CONF_TMP=$(mktemp  ~$CONAN_CONF.prv.XXX)
        cp $CONAN_CONF $CONF_TMP
        cat $CONF_TMP | \
-           sed -e 's/# revisions_enabled = False           # environment CONAN_REVISIONS_ENABLED/revisions_enabled = True           # environment CONAN_REVISIONS_ENABLED/' \
+           sed -e '/^\[general\]$/arevisions_enabled = True           # environment CONAN_REVISIONS_ENABLED/' \
              >$CONAN_CONF
    fi
 }
