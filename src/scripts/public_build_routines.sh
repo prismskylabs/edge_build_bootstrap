@@ -26,14 +26,14 @@ bootstrap_install_conan()
     sudo $CONAN_ENV_DIR/bin/pip3 install conan==$CONAN_VER
 
     sudo mkdir -p /usr/local/bin
-    sudo ln -s  $CONAN_ENV_DIR/bin/conan /usr/local/bin/conan 
+    [ -L /usr/local/bin/conan ] ||  sudo ln -s  $CONAN_ENV_DIR/bin/conan /usr/local/bin/conan 
 }
 
-boostrap_configure_conan()
+bootstrap_configure_conan()
 {
     PSL_CONAN_USER=${PSL_CONAN_USER:-$USER}
     sudo -H -u $PSL_CONAN_USER conan
-    CONAN_CONF=$(echo ~$PSL_CONAN_USER/.conan/conan.conf)
+    CONAN_CONF=$(eval echo "~$PSL_CONAN_USER/.conan/conan.conf")
     # Enable revisions
    if ! grep "revisions_enabled = True           # environment CONAN_REVISIONS_ENABLED"  $CONAN_CONF; then
        CONF_TMP=$(mktemp  ~$CONAN_CONF.prv.XXX)
@@ -48,6 +48,6 @@ bootstrap_setup()
 {
     bootstrap_install_python
     bootstrap_install_conan
-    boostrap_configure_conan
+    bootstrap_configure_conan
     echo "Bootstrap tools setup is done."
 }
