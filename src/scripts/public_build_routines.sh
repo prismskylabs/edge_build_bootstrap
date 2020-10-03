@@ -36,7 +36,7 @@ bootstrap_configure_conan()
     CONAN_CONF=$(eval echo "~$PSL_CONAN_USER/.conan/conan.conf")
     # Enable revisions
    if ! grep "revisions_enabled = True           # environment CONAN_REVISIONS_ENABLED"  $CONAN_CONF; then
-       CONF_TMP=$(mktemp  ~$CONAN_CONF.prv.XXX)
+       CONF_TMP=$(mktemp  $CONAN_CONF.prv.XXX)
        cp $CONAN_CONF $CONF_TMP
        cat $CONF_TMP | \
            sed -e '/^\[general\]$/arevisions_enabled = True           # environment CONAN_REVISIONS_ENABLED/' \
