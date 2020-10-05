@@ -1,0 +1,31 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    # All Vagrant configuration is done here. The most common configuration
+    # options are documented and commented below. For a complete reference,
+    # please see the online documentation at vagrantup.com.
+
+    # Every Vagrant virtual environment requires a box to build off of.
+    config.vm.box = 'ubuntu/bionic64'
+
+    config.vm.provider "virtualbox" do |vb|
+      # Make sure time is in sync
+      # https://superuser.com/questions/463106/virtualbox-how-to-sync-host-and-guest-time
+      vb.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/—-timesync-set-threshold", 10000 ]
+    end
+
+    # Colorize syntax in vim and other vim settings (indent, etc).
+    config.vm.provision "file", source: File.dirname(__FILE__) +"/.vimrc", destination: "/home/vagrant/.vimrc"
+    
+    gitconf_path = ENV["HOME"]+"/.gitconfig"
+    if File.exists?(gitconf_path)
+        config.vm.provision "file", source: "~/.gitconfig", destination: "/home/vagrant/.gitconfig"
+    end
+
+    config.vm.provider :virtualbox do |vb|
+        vb.memory = 4096
+        vb.cpus = 4
+    end
+end
+

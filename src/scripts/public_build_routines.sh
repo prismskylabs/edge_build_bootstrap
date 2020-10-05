@@ -4,10 +4,33 @@ CONAN_VER=1.29.2
 
 
 CONAN_ENV_DIR=$VENVS/conan
- 
-bootstrap_install_python()
+
+
+boostrap_install_git()
 {
     sudo apt-get update -y --force-yes
+    sudo apt-get install git -y --force-yes
+    PSL_CONAN_USER=${PSL_CONAN_USER:-$USER}
+
+    # Cache credentials entered once for some time.
+    sudo -H -u ${PSL_CONAN_USER} git config --global credential.helper 'cache --timeout 28800'
+}
+
+boostrap_install_vim()
+{
+    sudo apt-get install vim vim-scripts vim-doc -y --force-yes
+    sudo update-alternatives --set editor /usr/bin/vim.basic
+
+    sudo apt install vim-youcompleteme
+    PSL_CONAN_USER=${PSL_CONAN_USER:-$USER}
+
+    # https://dominoc925.blogspot.com/2019/09/installing-vim-youcompleteme-for-ubuntu.html
+    sudo -H -u ${PSL_CONAN_USER} vim-addon-manager install youcompleteme
+
+}
+
+bootstrap_install_python()
+{
     sudo apt-get install build-essential python3 python3-distutils vim -y --force-yes
 
     # We do not use system pip (from ubuntu) as it is not upgradable. So, install it from scratch
@@ -46,6 +69,8 @@ bootstrap_configure_conan()
 
 bootstrap_setup()
 {
+    boostrap_install_git
+    boostrap_install_vim
     bootstrap_install_python
     bootstrap_install_conan
     bootstrap_configure_conan
