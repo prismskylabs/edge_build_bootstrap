@@ -54,6 +54,11 @@ bootstrap_install_extra_tools()
     sudo apt-get install build-essential cmake python3-dev  -y --force-yes
 }
 
+boostrap_install_linux_amd64_tools()
+{
+    sudo apt-get install yasm g++ gdb
+}
+
 bootstrap_install_conan()
 {
     sudo python3 -m virtualenv $CONAN_ENV_DIR
@@ -76,6 +81,47 @@ bootstrap_configure_conan()
            sed -e '/^\[general\]$/arevisions_enabled = True           # environment CONAN_REVISIONS_ENABLED' \
              >$CONAN_CONF
    fi
+}
+
+bootstrap_install_closed_source_related_tools () 
+{
+    # This is for stuff beyond Linux-x86_64. It is accessible inside our org only.
+    # You can not invoke it if you are not a member of prismskylabs. 
+    # It will fail, as you need credentials.
+    # It basically deploys private 3-d party toolchains, conan profiles and cmake toolchain configs.
+    # If you  need to integrate custom toolchain, this is where you can replace
+    # code with yours to configure your toolchain, build profiles for it and so on.
+    # If you need to go that way, you do customization for your particular case 
+    # in your fork or copy of the code. 
+    # This is where our open source ends.
+    # We believe it is still useful. However, we do not guarantee it or anything about this code.
+    local SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+    EDGE_BUILD_BASE_DIR=$SCRIPTS_DIR/../../edge_build_base
+    mkdir -p $EDGE_BUILD_BASE_DIR
+    pushd $EDGE_BUILD_BASE_DIR
+      conan install edge_build_base/1.0@psl/dev
+    popd
+
+    .  $EDGE_BUILD_BASE_DIR/src/scripts/setup_routines.sh
+
+
+
+}
+
+bootstrap_configure_toolchain ()
+{
+    PKG_PLATFORM="${PKG_PLATFORM:-Linux-amd64}"
+    if [ "$PKG_PLATFORM" = "Linux-x86_64"] ; then
+       PKG_PLATFORM="Linux-amd64"
+    fi
+
+    export PKG_PLATFORM="${PKG_PLATFORM}"
+    if [ "$PKG_PLATFORM" = "Linux-amd64"]; then 
+      boostrap_install_linux_amd64_tools
+    else
+      bootstrap_install_closed_source_related_tools
+    fi
 }
 
 bootstrap_setup()
