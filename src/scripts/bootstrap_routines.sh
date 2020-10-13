@@ -97,16 +97,23 @@ bootstrap_install_closed_source_related_tools ()
     # We believe it is still useful. However, we do not guarantee it or anything about this code.
     local SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+    conan remote add psl-conan  https://artifactory-cpp.dev.prismsl.net/api/conan/conan False
+    conan remote list
+    PKG_INFO_PATH=$SCRIPTS_DIR/../../../edge_build_base
+    [ -f $PKG_INFO_PATH ] || \
+        { >&2 echo "Error. File with edge_build_base package info not found. Skipping installation."; return 1 }
+    EDGE_BUILD_BASE_CONAN_PKG=$(cat $PKG_INFO_PATH)
+    echo "Trying to install conan package $EDGE_BUILD_BASE_CONAN_PKG"
+    echo "Please, enter psl-conan (artifactory-cpp) credentials to download deps package when prompted"
+
     EDGE_BUILD_BASE_DIR=$SCRIPTS_DIR/../../edge_build_base
     mkdir -p $EDGE_BUILD_BASE_DIR
     pushd $EDGE_BUILD_BASE_DIR
-      conan install edge_build_base/1.0@psl/dev
+      conan install $EDGE_BUILD_BASE_CONAN_PKG
     popd
 
     .  $EDGE_BUILD_BASE_DIR/src/scripts/setup_routines.sh
-
-
-
+    setup_env_for_target $PKG_PLATFORM
 }
 
 bootstrap_configure_toolchain ()
