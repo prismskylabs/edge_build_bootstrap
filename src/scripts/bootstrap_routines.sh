@@ -101,7 +101,7 @@ bootstrap_install_closed_source_related_tools ()
     conan remote list
     PKG_INFO_PATH=$SCRIPTS_DIR/../../../edge_build_base
     [ -f $PKG_INFO_PATH ] || \
-        { >&2 echo "Error. File with edge_build_base package info not found. Skipping installation."; return 1 }
+        { >&2 echo "Error. File with edge_build_base package info not found. Skipping installation."; return 1; }
     EDGE_BUILD_BASE_CONAN_PKG=$(cat $PKG_INFO_PATH)
     echo "Trying to install conan package $EDGE_BUILD_BASE_CONAN_PKG"
     echo "Please, enter psl-conan (artifactory-cpp) credentials to download deps package when prompted"
