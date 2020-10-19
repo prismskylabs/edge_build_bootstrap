@@ -107,7 +107,6 @@ bootstrap_install_closed_source_related_tools ()
     # We believe it is still useful. However, we do not guarantee it or anything about this code.
     local SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-    conan remote add psl-conan  https://artifactory-cpp.dev.prismsl.net/api/conan/conan False
     conan remote list
     PKG_INFO_PATH=$SCRIPTS_DIR/../../../edge_build_base
     [ -f $PKG_INFO_PATH ] || \
