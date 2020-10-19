@@ -68,7 +68,7 @@ bootstrap_install_conan()
     [ -L /usr/local/bin/conan ] ||  sudo ln -s  $CONAN_ENV_DIR/bin/conan /usr/local/bin/conan 
 }
 
-bootstrap_configure_conan()
+bootstrap_configure_conan_revisions()
 {
     PSL_USER=${PSL_USER:-$USER}
     sudo -H -u $PSL_USER conan
@@ -81,6 +81,15 @@ bootstrap_configure_conan()
            sed -e '/^\[general\]$/arevisions_enabled = True           # environment CONAN_REVISIONS_ENABLED' \
              >$CONAN_CONF
    fi
+}
+
+bootstrap_configure_conan()
+{
+    bootstrap_configure_conan_revisions
+
+    conan remote remove conan-center # Remove global public default. We will use only our own conan.
+    conan remote add psl-conan  https://artifactory-cpp.dev.prismsl.net/api/conan/conan False
+    conan remote list
 }
 
 bootstrap_install_closed_source_related_tools () 
