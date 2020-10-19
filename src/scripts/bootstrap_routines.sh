@@ -87,9 +87,10 @@ bootstrap_configure_conan()
 {
     bootstrap_configure_conan_revisions
 
-    conan remote remove conan-center # Remove global public default. We will use only our own conan.
-    conan remote add psl-conan  https://artifactory-cpp.dev.prismsl.net/api/conan/conan False
-    conan remote list
+    PSL_USER=${PSL_USER:-$USER} # Configure conan under this user
+    sudo -H -u $PSL_USER conan remote remove conan-center # Remove global public default. We will use only our own conan.
+    sudo -H -u $PSL_USER conan remote add psl-conan  https://artifactory-cpp.dev.prismsl.net/api/conan/conan False
+    sudo -H -u $PSL_USER conan remote list
 }
 
 bootstrap_install_closed_source_related_tools () 
