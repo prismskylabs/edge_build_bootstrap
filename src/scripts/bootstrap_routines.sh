@@ -115,7 +115,7 @@ bootstrap_install_closed_source_related_tools ()
     echo "Trying to install conan package $EDGE_BUILD_BASE_CONAN_PKG"
     echo "Please, enter psl-conan (artifactory-cpp) credentials to download deps package when prompted"
 
-    EDGE_BUILD_BASE_DIR=$SCRIPTS_DIR/../../edge_build_base
+    EDGE_BUILD_BASE_DIR=$SCRIPTS_DIR/../../../../../edge_build_base
     mkdir -p $EDGE_BUILD_BASE_DIR
     pushd $EDGE_BUILD_BASE_DIR
       conan install $EDGE_BUILD_BASE_CONAN_PKG
