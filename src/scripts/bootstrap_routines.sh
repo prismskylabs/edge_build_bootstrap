@@ -128,12 +128,12 @@ bootstrap_install_closed_source_related_tools ()
 bootstrap_configure_toolchain ()
 {
     PKG_PLATFORM="${PKG_PLATFORM:-Linux-amd64}"
-    if [ "$PKG_PLATFORM" = "Linux-x86_64"] ; then
+    if [ "$PKG_PLATFORM" = "Linux-x86_64" ]; then
        PKG_PLATFORM="Linux-amd64"
     fi
 
     export PKG_PLATFORM="${PKG_PLATFORM}"
-    if [ "$PKG_PLATFORM" = "Linux-amd64"]; then 
+    if [ "$PKG_PLATFORM" = "Linux-amd64" ]; then 
       boostrap_install_linux_amd64_tools
     else
       bootstrap_install_closed_source_related_tools
