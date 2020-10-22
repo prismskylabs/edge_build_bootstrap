@@ -122,7 +122,10 @@ bootstrap_install_closed_source_related_tools ()
     EDGE_BUILD_BASE_DIR=$SCRIPTS_DIR/../../../../../edge_build_base
     mkdir -p $EDGE_BUILD_BASE_DIR
     pushd $EDGE_BUILD_BASE_DIR
-      conan install -r psl-conan  $EDGE_BUILD_BASE_CONAN_PKG
+      for i in $(seq 1 5); do
+          conan install -r psl-conan  $EDGE_BUILD_BASE_CONAN_PKG && break
+          sleep 15 && false
+      done
     popd
 
     .  $EDGE_BUILD_BASE_DIR/src/scripts/setup_routines.sh
