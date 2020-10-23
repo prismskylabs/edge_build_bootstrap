@@ -109,9 +109,12 @@ bootstrap_install_closed_source_related_tools ()
 
     conan remote list
 
-    echo "Logging into psl-conan server."
-    echo "Please, enter psl-conan (artifactory-cpp) credentials when prompted"
-    conan user -r psl-conan  -p
+    CONAN_USER_INFO=$(conan user -r psl-conan)
+    if [ "$CONAN_USER_INFO" == "Current user of remote 'psl-conan' set to: 'None' (anonymous)" ]; then 
+        echo "Logging into psl-conan server."
+        echo "Please, enter psl-conan (artifactory-cpp) credentials when prompted"
+        conan user -r psl-conan  -p
+    fi
 
     PKG_INFO_PATH=$SCRIPTS_DIR/../../../edge_build_base
     [ -f $PKG_INFO_PATH ] || \
