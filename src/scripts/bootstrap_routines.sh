@@ -41,9 +41,9 @@ bootstrap_install_python()
 
     # We do not use system pip (from ubuntu) as it is not upgradable. So, install it from scratch
     wget  https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py --progress=dot:giga
-    sudo python3 /tmp/get-pip.py pip==$PIP_VER wheel==0.34.2 setuptools\>=34.0.0
-    sudo python3 -m pip install pip==$PIP_VER --upgrade
-    sudo python3 -m pip install virtualenv
+    sudo -H python3 /tmp/get-pip.py pip==$PIP_VER wheel==0.34.2 setuptools\>=34.0.0
+    sudo -H python3 -m pip install pip==$PIP_VER --upgrade
+    sudo -H python3 -m pip install virtualenv
 
     sudo mkdir -p $VENVS 
 
@@ -61,8 +61,8 @@ boostrap_install_linux_amd64_tools()
 
 bootstrap_install_conan()
 {
-    sudo python3 -m virtualenv $CONAN_ENV_DIR
-    sudo $CONAN_ENV_DIR/bin/pip3 install conan==$CONAN_VER
+    sudo -H python3 -m virtualenv $CONAN_ENV_DIR
+    sudo -H $CONAN_ENV_DIR/bin/pip3 install conan==$CONAN_VER
 
     sudo mkdir -p /usr/local/bin
     [ -L /usr/local/bin/conan ] ||  sudo ln -s  $CONAN_ENV_DIR/bin/conan /usr/local/bin/conan 
