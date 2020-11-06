@@ -56,7 +56,7 @@ bootstrap_install_extra_tools()
 
 boostrap_install_linux_amd64_tools()
 {
-    sudo apt-get install nasm yasm g++ gdb -y --force-yes
+    sudo apt-get install nasm yasm g++ gdb pkg-config  -y --force-yes
 }
 
 bootstrap_install_conan()
