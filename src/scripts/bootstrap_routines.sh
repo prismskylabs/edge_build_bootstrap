@@ -6,6 +6,36 @@ CONAN_VER=1.29.2
 CONAN_ENV_DIR=$VENVS/conan
 
 
+apt-get-ni ()
+{
+    sudo apt-get --allow-downgrades --allow-remove-essential --allow-change-held-packages "$@"
+}
+
+refresh-fs ()
+{
+    # Workaround MacOSX Sierra NSF mount issue with Vagrant
+    # https://github.com/mitchellh/vagrant/issues/8061#issuecomment-291954060
+    if [ $# -ne 1 ]; 
+        then DSTPATH=.
+    else 
+        DSTPATH="$1"
+    fi
+
+    find "$DSTPATH" -type d \
+        -exec touch '{}'/.touch ';' \
+        -exec rm -f '{}'/.touch ';' \
+        2>/dev/null
+}
+
+
+wgetbig ()
+{   # This makes big downloads look much better in vagrant output
+    # It expected to be used with --postgres=dot:giga 
+    # See actual usages for examples
+    stdbuf -eL wget "$@" 2>&1 1>/dev/null  |  stdbuf -oL sed -e 's!\.!\.!g'
+    # We use stdbuf and piping here to flush output by lines, instead of by symbol, thus producing less noise and length
+}
+
 boostrap_install_git()
 {
     sudo apt-get update -y --force-yes
@@ -132,7 +162,7 @@ bootstrap_install_closed_source_related_tools ()
     popd
 
     .  $EDGE_BUILD_BASE_DIR/src/scripts/setup_routines.sh
-    setup_env_for_target $PKG_PLATFORM
+    setup_env_for_platform $PKG_PLATFORM
 }
 
 bootstrap_configure_toolchain ()
@@ -143,7 +173,7 @@ bootstrap_configure_toolchain ()
     fi
 
     export PKG_PLATFORM="${PKG_PLATFORM}"
-    if [ "$PKG_PLATFORM" = "linux-amd64" ]; then 
+    if [ "$PKG_PLATFORM" = "linux-amd64" ] && [ -z "${EDGE_TARGET:-}" ]; then 
       boostrap_install_linux_amd64_tools
     else
       bootstrap_install_closed_source_related_tools
