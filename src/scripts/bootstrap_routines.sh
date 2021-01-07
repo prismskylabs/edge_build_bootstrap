@@ -145,7 +145,7 @@ bootstrap_install_closed_source_related_tools ()
         echo "Please, enter your psl-conan (artifactory-cpp) credentials when prompted"
         for i in $(seq 1 5); do
             conan user -r psl-conan  -p      && break
-            sleep 15 && false
+            sleep 5 && false
         done
         if [ $? -ne 0 ]; then
             echo "Logging to conan artifactory server failed. Can not continue. Stopping."
