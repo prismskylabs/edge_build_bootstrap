@@ -37,7 +37,7 @@ wgetbig ()
 }
 
 if ! which sudo >/dev/null ; then 
-    sudo() { "$@" } # Empty substitute for sudo in docker env.
+    sudo() { "$@"; } # Empty substitute for sudo in docker env.
 fi
 [ -z "${USER:-}" ] && USER=$(id -un)
  
