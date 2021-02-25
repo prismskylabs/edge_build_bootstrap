@@ -36,11 +36,16 @@ wgetbig ()
     # We use stdbuf and piping here to flush output by lines, instead of by symbol, thus producing less noise and length
 }
 
+if ! which sudo >/dev/null ; then 
+    sudo() { "$@" } # Empty substitute for sudo in docker env.
+fi
+[ -z "${USER:-}" ] && USER=$(id -un)
+ 
 boostrap_install_git()
 {
     sudo apt-get update -y --force-yes
     sudo apt-get install git -y --force-yes
-    PSL_USER=${PSL_USER:-$USER}
+   PSL_USER=${PSL_USER:-$USER}
 
     # Cache credentials entered once for some time.
     sudo -H -u ${PSL_USER} git config --global credential.helper 'cache --timeout 28800'
