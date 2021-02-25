@@ -37,7 +37,20 @@ wgetbig ()
 }
 
 if ! which sudo >/dev/null ; then 
-    sudo() { "$@"; } # Empty substitute for sudo in docker env.
+    sudo() 
+    {
+        if [ "${1:-}" == "-H" ] ; then # Skip -H
+                shift;
+        fi
+        if [ "${1:-}" == "-u" ] ; then # Skip -u user
+            shift;
+            shift;
+        fi
+        if [ "${1:-}" == "-H" ] ; then # Skip -H
+                shift;
+        fi
+        "$@"; 
+    } # Empty substitute for sudo in docker env.
 fi
 [ -z "${USER:-}" ] && USER=$(id -un)
  
@@ -86,7 +99,7 @@ bootstrap_install_python()
 
 bootstrap_install_extra_tools()
 {
-    sudo apt-get install build-essential cmake python3-dev  -y --force-yes
+    sudo apt-get install build-essential cmake python3-dev wget -y --force-yes
 }
 
 boostrap_install_linux_amd64_tools()
