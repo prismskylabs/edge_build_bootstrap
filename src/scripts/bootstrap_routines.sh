@@ -15,9 +15,9 @@ refresh-fs ()
 {
     # Workaround MacOSX Sierra NSF mount issue with Vagrant
     # https://github.com/mitchellh/vagrant/issues/8061#issuecomment-291954060
-    if [ $# -ne 1 ]; 
+    if [ $# -ne 1 ];
         then DSTPATH=.
-    else 
+    else
         DSTPATH="$1"
     fi
 
@@ -30,14 +30,14 @@ refresh-fs ()
 
 wgetbig ()
 {   # This makes big downloads look much better in vagrant output
-    # It expected to be used with --postgres=dot:giga 
+    # It expected to be used with --postgres=dot:giga
     # See actual usages for examples
     stdbuf -eL wget "$@" 2>&1 1>/dev/null  |  stdbuf -oL sed -e 's!\.!\.!g'
     # We use stdbuf and piping here to flush output by lines, instead of by symbol, thus producing less noise and length
 }
 
-if ! which sudo >/dev/null ; then 
-    sudo() 
+if ! which sudo >/dev/null ; then
+    sudo()
     {
         if [ "${1:-}" == "-H" ] ; then # Skip -H
                 shift;
@@ -49,11 +49,11 @@ if ! which sudo >/dev/null ; then
         if [ "${1:-}" == "-H" ] ; then # Skip -H
                 shift;
         fi
-        "$@"; 
+        "$@";
     } # Empty substitute for sudo in docker env.
 fi
 [ -z "${USER:-}" ] && USER=$(id -un)
- 
+
 boostrap_install_git()
 {
     sudo apt-get update -y --force-yes
@@ -88,12 +88,12 @@ bootstrap_install_python()
     sudo apt-get install build-essential python3 python3-distutils vim -y --force-yes
 
     # We do not use system pip (from ubuntu) as it is not upgradable. So, install it from scratch
-    wget  https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py --progress=dot:giga
+    wget  https://bootstrap.pypa.io/pip/3.6/get-pip.py -O /tmp/get-pip.py --progress=dot:giga
     sudo -H python3 /tmp/get-pip.py pip==$PIP_VER wheel==0.34.2 setuptools\>=34.0.0
     sudo -H python3 -m pip install pip==$PIP_VER --upgrade
     sudo -H python3 -m pip install virtualenv
 
-    sudo mkdir -p $VENVS 
+    sudo mkdir -p $VENVS
 
 }
 
@@ -113,7 +113,7 @@ bootstrap_install_conan()
     sudo -H $CONAN_ENV_DIR/bin/pip3 install conan==$CONAN_VER
 
     sudo mkdir -p /usr/local/bin
-    [ -L /usr/local/bin/conan ] ||  sudo ln -s  $CONAN_ENV_DIR/bin/conan /usr/local/bin/conan 
+    [ -L /usr/local/bin/conan ] ||  sudo ln -s  $CONAN_ENV_DIR/bin/conan /usr/local/bin/conan
 }
 
 bootstrap_configure_conan_revisions()
@@ -141,16 +141,16 @@ bootstrap_configure_conan()
     sudo -H -u $PSL_USER conan remote list
 }
 
-bootstrap_install_closed_source_related_tools () 
+bootstrap_install_closed_source_related_tools ()
 {
     # This is for stuff beyond Linux-x86_64. It is accessible inside our org only.
-    # You can not invoke it if you are not a member of prismskylabs. 
+    # You can not invoke it if you are not a member of prismskylabs.
     # It will fail, as you need credentials.
     # It basically deploys private 3-d party toolchains, conan profiles and cmake toolchain configs.
     # If you  need to integrate custom toolchain, this is where you can replace
     # code with yours to configure your toolchain, build profiles for it and so on.
-    # If you need to go that way, you do customization for your particular case 
-    # in your fork or copy of the code. 
+    # If you need to go that way, you do customization for your particular case
+    # in your fork or copy of the code.
     # This is where our open source ends.
     # We believe it is still useful. However, we do not guarantee it or anything about this code.
     local SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
@@ -158,7 +158,7 @@ bootstrap_install_closed_source_related_tools ()
     conan remote list
 
     CONAN_USER_INFO=$(conan user -r psl-conan)
-    if [ "$CONAN_USER_INFO" == "Current user of remote 'psl-conan' set to: 'None' (anonymous)" ]; then 
+    if [ "$CONAN_USER_INFO" == "Current user of remote 'psl-conan' set to: 'None' (anonymous)" ]; then
         echo "Logging into psl-conan server."
         echo "Please, enter your psl-conan (artifactory-cpp) credentials when prompted"
         for i in $(seq 1 5); do
@@ -198,7 +198,7 @@ bootstrap_configure_toolchain ()
     fi
 
     export PKG_PLATFORM="${PKG_PLATFORM}"
-    if [ "$PKG_PLATFORM" = "linux-amd64" ] && [ -z "${EDGE_TARGET:-}" ]; then 
+    if [ "$PKG_PLATFORM" = "linux-amd64" ] && [ -z "${EDGE_TARGET:-}" ]; then
       boostrap_install_linux_amd64_tools
     else
       bootstrap_install_closed_source_related_tools
